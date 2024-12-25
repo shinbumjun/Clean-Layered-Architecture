@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity // 브랜치 추가
 @Table(name = "users")
 public class User { // ctrl + f6
 
