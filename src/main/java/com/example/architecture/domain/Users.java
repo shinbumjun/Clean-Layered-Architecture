@@ -1,11 +1,14 @@
 package com.example.architecture.domain;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "users") // 실제 테이블 이름 매핑
+@Data // // Lombok의 @Data 어노테이션을 사용하면 getter, setter, toString, equals, hashCode를 자동으로 생성
 public class Users { // 사용자
     @Id // Primary Key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가
