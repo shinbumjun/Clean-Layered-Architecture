@@ -1,48 +1,28 @@
 package com.example.architecture.domain;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "lecture")
-public class Lecture {
+@Table(name = "lecture") // 실제 테이블 이름 매핑
+@Data // // Lombok의 @Data 어노테이션을 사용하면 getter, setter, toString, equals, hashCode를 자동으로 생성
+public class Lecture { // 특강
+    @Id // Primary Key
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가
+    private Long lectureId; // 특강 ID (고유 식별자)
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long lectureId; // 특강 ID
+    private String title; // 특강 제목
+    private LocalDateTime lectureDate; // 특강 날짜 및 시간
 
-    @Column(nullable = false)
-    private String title; // 특강 이름
+    @ManyToOne(fetch = FetchType.LAZY) // 강연자와 다대일 관계
+    @JoinColumn(name = "speaker_id", nullable = false) // 외래 키 설정 (강연자 ID)
+    private Users speaker; // 강연자 (User 엔티티와 연결)
 
-    @Column(nullable = false)
-    private LocalDateTime lectureDate; // 특강 날짜와 시간
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true) // 특강과 신청의 일대다 관계
+    private List<LectureApplication> applications = new ArrayList<>(); // 특강 신청 목록
 
-    @Column(nullable = false)
-    private int maxStudent; // 최대 신청 인원수
-
-    // 연관 관계 (LECTURER -> Users)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "speaker_id", nullable = false) // 강연자 ID
-    private User speaker;
-
-    // 연관 관계 (Lecture -> LectureApplication)
-    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<LectureApplication> applications = new ArrayList<>();
-
-    // 기본 생성자
-    protected Lecture() {}
-
-    // 생성자
-    public Lecture(String title, LocalDateTime lectureDate, int maxStudent, User speaker) {
-        this.title = title;
-        this.lectureDate = lectureDate;
-        this.maxStudent = maxStudent;
-        this.speaker = speaker;
-    }
-
-    // Getter, Setter...
 }
-
